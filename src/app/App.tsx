@@ -19,7 +19,6 @@ import {
 } from "motion/react";
 import { registerSquircle } from "../utils/squircle";
 import Daybound from "../imports/Daybound";
-import { OpenGraphImage } from "./components/OpenGraphImage";
 
 // Register the squircle paint worklet for smooth corners (idempotent)
 registerSquircle();
@@ -353,7 +352,6 @@ function App() {
   // Render main app
   return (
     <MotionConfig reducedMotion="user">
-      <OpenGraphImage />
       {/* Fixed background layer — guarantees the entire viewport
           (including behind iOS safe areas / Android nav bar)
           is painted with the correct theme background color. */}
