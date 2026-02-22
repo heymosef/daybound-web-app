@@ -26,6 +26,20 @@ const matchesQuery = (text: string, query: string): boolean => {
   return normalize(text).includes(q);
 };
 
+const MAX_QUERY_LEN = 64;
+
+/** Strip diacritics, punctuation, digits, emojis; keep letters, spaces, hyphens, apostrophes. */
+const sanitizeQuery = (raw: string): string =>
+  raw
+    .replace(/_/g, " ")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z\s'\-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, MAX_QUERY_LEN);
+
 interface AddTimezoneProps {
   onAdd: (timezone: string, label?: string) => void;
   existingTimezones: string[];
@@ -209,6 +223,30 @@ export const AddTimezone: React.FC<AddTimezoneProps> = ({
   const hasAvailable = availableResults.length > 0;
   const hasAlreadyAdded = alreadyAddedResults.length > 0;
   const noResults = !hasAvailable && !hasAlreadyAdded;
+
+  const lastNoResultQuery = useRef("");
+
+  useEffect(() => {
+    const trimmed = search.trim();
+    if (trimmed.length < 3) return;
+    if (!noResults) return;
+
+    const sanitized = sanitizeQuery(trimmed);
+    if (!sanitized || sanitized.length < 2) return;
+    if (lastNoResultQuery.current === sanitized) return;
+
+    const timer = window.setTimeout(() => {
+      lastNoResultQuery.current = sanitized;
+      const words = sanitized.split(" ").filter(Boolean);
+      posthog?.capture("timezone_search_no_results", {
+        query_sanitized: sanitized,
+        query_length: trimmed.length,
+        query_words: words.length,
+      });
+    }, 700);
+
+    return () => window.clearTimeout(timer);
+  }, [search, noResults, posthog]);
 
   return (
     <div className="relative w-full md:w-[24.5em] h-full" ref={wrapperRef}>
