@@ -1,2 +1,7 @@
 node_modules
 dist
+
+# Local environment files (Vite exposes VITE_* to client builds)
+.env
+.env.*
+!.env.example
