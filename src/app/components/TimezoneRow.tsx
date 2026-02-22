@@ -12,14 +12,7 @@ import {
 import { Timeline } from "./Timeline";
 import { motion, AnimatePresence } from "motion/react";
 import { MorphingTime } from "./MorphingTime";
-
-// ── Shared easing curves (Tip 4: different easing for enter vs exit) ──
-const EASE_OUT: [number, number, number, number] = [
-  0, 0, 0.2, 1,
-]; // decelerate – for entrances
-const EASE_IN: [number, number, number, number] = [
-  0.4, 0, 1, 1,
-]; // accelerate – for exits
+import { EASE_OUT, EASE_IN } from "../../utils/animation";
 
 interface TimezoneRowProps {
   config: TimezoneConfig;
@@ -42,7 +35,7 @@ interface TimezoneRowProps {
   selectedDateOffset: number;
 }
 
-export const TimezoneRow: React.FC<TimezoneRowProps> = ({
+const TimezoneRowInner: React.FC<TimezoneRowProps> = ({
   config,
   now,
   timelineTime,
@@ -121,6 +114,7 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
                 onClick={() => onRemove(config.id)}
                 className="md:hidden text-[var(--dt-text-muted)] hover:text-red-600 transition-colors p-0.5"
                 title="Remove timezone"
+                aria-label="Remove timezone"
               >
                 <X className="w-[1em] h-[1em]" />
               </button>
@@ -129,6 +123,7 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
                   <button
                     onClick={() => onMove(config.id, "up")}
                     className="text-[var(--dt-text-muted)] hover:text-[var(--dt-text-secondary)] p-0.5 rounded hover:bg-[var(--dt-surface-raised)]"
+                    aria-label="Move up"
                   >
                     <ArrowUp className="w-[1em] h-[1em]" />
                   </button>
@@ -137,6 +132,7 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
                   <button
                     onClick={() => onMove(config.id, "down")}
                     className="text-[var(--dt-text-muted)] hover:text-[var(--dt-text-secondary)] p-0.5 rounded hover:bg-[var(--dt-surface-raised)]"
+                    aria-label="Move down"
                   >
                     <ArrowDown className="w-[1em] h-[1em]" />
                   </button>
@@ -157,6 +153,7 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
                   onChange={(e) => setEditName(e.target.value)}
                   onBlur={handleSaveRename}
                   onKeyDown={handleKeyDown}
+                  aria-label="Edit timezone label"
                 />
               </div>
             ) : (
@@ -240,6 +237,7 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
               <button
                 onClick={() => onMove(config.id, "up")}
                 className="text-[var(--dt-text-muted)] hover:text-[var(--dt-text-secondary)] p-0.5 rounded hover:bg-[var(--dt-surface-raised)]"
+                aria-label="Move up"
               >
                 <ArrowUp className="w-[1em] h-[1em]" />
               </button>
@@ -248,6 +246,7 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
               <button
                 onClick={() => onMove(config.id, "down")}
                 className="text-[var(--dt-text-muted)] hover:text-[var(--dt-text-secondary)] p-0.5 rounded hover:bg-[var(--dt-surface-raised)]"
+                aria-label="Move down"
               >
                 <ArrowDown className="w-[1em] h-[1em]" />
               </button>
@@ -268,6 +267,7 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
             onClick={() => onSetHome(config.id)}
             className="p-[0.375em] text-[var(--dt-text-muted)] hover:text-[var(--dt-accent)] hover:bg-[var(--dt-surface-raised)] rounded-md transition-all mr-1"
             title="Set as home"
+            aria-label="Set as home timezone"
           >
             <Home className="w-[1.25em] h-[1.25em]" />
           </button>
@@ -275,6 +275,7 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
             onClick={() => onRemove(config.id)}
             className="p-[0.375em] text-[var(--dt-text-muted)] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all"
             title="Remove timezone"
+            aria-label="Remove timezone"
           >
             <X className="w-[1.25em] h-[1.25em]" />
           </button>
@@ -300,3 +301,5 @@ export const TimezoneRow: React.FC<TimezoneRowProps> = ({
     </div>
   );
 };
+
+export const TimezoneRow = React.memo(TimezoneRowInner);

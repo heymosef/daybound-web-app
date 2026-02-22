@@ -12,14 +12,7 @@ import {
   type SearchResult,
 } from "../../utils/timezoneUtils";
 import { motion, AnimatePresence } from "motion/react";
-
-// ── Easing curves (Tip 4) ──
-const EASE_OUT: [number, number, number, number] = [
-  0, 0, 0.2, 1,
-];
-const EASE_IN: [number, number, number, number] = [
-  0.4, 0, 1, 1,
-];
+import { EASE_OUT, EASE_IN } from "../../utils/animation";
 
 /** Normalize underscores ↔ spaces for matching */
 const normalize = (s: string) =>
@@ -244,6 +237,7 @@ export const AddTimezone: React.FC<AddTimezoneProps> = ({
               ? `tz-option-${highlightedIndex}`
               : undefined
           }
+          aria-controls="tz-listbox"
         />
         {/* Fixed-width right slot to prevent layout shift */}
         <div className="flex-shrink-0 w-[3em] flex items-center justify-end">
@@ -295,6 +289,7 @@ export const AddTimezone: React.FC<AddTimezoneProps> = ({
               transition: { duration: 0.12, ease: EASE_IN },
             }}
             role="listbox"
+            id="tz-listbox"
           >
             {noResults ? (
               <div className="px-3 py-[2em] text-center">

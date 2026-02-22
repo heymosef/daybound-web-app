@@ -15,6 +15,7 @@ import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { motion, AnimatePresence } from "motion/react";
 import { MorphingTime } from "./MorphingTime";
+import { EASE_OUT, EASE_IN } from "../../utils/animation";
 
 interface TimelineProps {
   now: Date;
@@ -34,15 +35,7 @@ const TOTAL_HOURS = 25; // always 25 cells
 const CENTER_INDEX = 12; // index of the "current hour" cell (live mode)
 const LABEL_PAD = 0; // px – clamping offset from the container edge
 
-// ── Shared easing curves (Tip 4: different easing for enter vs exit) ──
-const EASE_OUT: [number, number, number, number] = [
-  0, 0, 0.2, 1,
-]; // decelerate – for entrances
-const EASE_IN: [number, number, number, number] = [
-  0.4, 0, 1, 1,
-]; // accelerate – for exits
-
-export const Timeline: React.FC<TimelineProps> = ({
+const TimelineInner: React.FC<TimelineProps> = ({
   now,
   timezone,
   isHome,
@@ -453,3 +446,5 @@ export const Timeline: React.FC<TimelineProps> = ({
     </div>
   );
 };
+
+export const Timeline = React.memo(TimelineInner);

@@ -18,21 +18,25 @@ export interface AppSettings {
   showWeekends: boolean;
 }
 
+let _cachedTimezones: string[] | null = null;
+
 export const getCommonTimezones = (): string[] => {
+  if (_cachedTimezones) return _cachedTimezones;
+
   if (
     typeof Intl !== "undefined" &&
     "supportedValuesOf" in Intl
   ) {
     try {
       // @ts-ignore
-      return Intl.supportedValuesOf("timeZone");
+      _cachedTimezones = Intl.supportedValuesOf("timeZone");
+      return _cachedTimezones;
     } catch (e) {
       console.warn("Intl.supportedValuesOf failed", e);
     }
   }
 
-  // Fallback list
-  return [
+  _cachedTimezones = [
     "UTC",
     "America/New_York",
     "America/Los_Angeles",
@@ -47,6 +51,7 @@ export const getCommonTimezones = (): string[] => {
     "Australia/Sydney",
     "Pacific/Auckland",
   ];
+  return _cachedTimezones;
 };
 
 export const formatTimezoneTime = (
@@ -621,24 +626,21 @@ const IANA_COUNTRY: Record<string, string> = {
   "Pacific/Noumea": "New Caledonia",
 };
 
+const TIMEZONE_TO_COUNTRY: Record<string, string> = {};
+for (const info of Object.values(CITY_ALIASES)) {
+  if (!TIMEZONE_TO_COUNTRY[info.timezone]) {
+    TIMEZONE_TO_COUNTRY[info.timezone] = info.country;
+  }
+}
+
 /**
  * Resolves a country name from an IANA timezone identifier.
- * Priority: static IANA map → reverse CITY_ALIASES lookup → IANA region fallback.
+ * Priority: static IANA map → pre-built reverse CITY_ALIASES map → IANA region fallback.
  */
-export const getCountryFromTimezone = (
-  timezone: string,
-): string => {
-  // 1. Direct IANA lookup
-  if (IANA_COUNTRY[timezone]) return IANA_COUNTRY[timezone];
-
-  // 2. Reverse lookup from CITY_ALIASES (first alias whose IANA matches)
-  for (const info of Object.values(CITY_ALIASES)) {
-    if (info.timezone === timezone) return info.country;
-  }
-
-  // 3. Fallback to the region portion of the IANA ID (e.g. "America")
-  return getRegionName(timezone);
-};
+export const getCountryFromTimezone = (timezone: string): string =>
+  IANA_COUNTRY[timezone] ??
+  TIMEZONE_TO_COUNTRY[timezone] ??
+  getRegionName(timezone);
 
 export interface SearchResult {
   timezone: string;

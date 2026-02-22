@@ -5,13 +5,7 @@ import {
 } from "lucide-react";
 import { AppSettings, TimezoneConfig, getCityName } from "../../utils/timezoneUtils";
 import { motion, AnimatePresence } from "motion/react";
-
-const EASE_OUT: [number, number, number, number] = [
-  0, 0, 0.2, 1,
-];
-const EASE_IN: [number, number, number, number] = [
-  0.4, 0, 1, 1,
-];
+import { EASE_OUT, EASE_IN } from "../../utils/animation";
 
 interface SettingsMenuProps {
   settings: AppSettings;
@@ -28,6 +22,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -36,6 +31,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
         !menuRef.current.contains(e.target as Node)
       ) {
         setIsOpen(false);
+        triggerRef.current?.focus();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -48,7 +44,10 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsOpen(false);
+      if (e.key === "Escape") {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
     };
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
@@ -69,6 +68,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
   return (
     <div className="relative h-full" ref={menuRef}>
       <button
+        ref={triggerRef}
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center justify-center gap-[0.375em] px-[0.75em] py-[0.375em] rounded-md transition-all h-full min-w-[2.5em] ${
           isOpen

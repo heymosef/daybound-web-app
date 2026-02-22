@@ -212,9 +212,6 @@ function App() {
     root.setAttribute("data-design-theme", designTheme);
   }, [designTheme]);
 
-  useEffect(() => {
-    document.title = "Daybound";
-  }, []);
 
   const [initialized, setInitialized] = useState(false);
   const [selectedDateOffset, setSelectedDateOffset] =

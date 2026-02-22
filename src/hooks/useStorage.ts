@@ -1,26 +1,27 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 
 export function usePersistentState<T>(
   key: string,
   initialValue: T,
 ) {
-  const [state, setState] = useState<T>(initialValue);
-  const [loading, setLoading] = useState(true);
-  const isLoaded = useRef(false);
-
-  useEffect(() => {
+  const [state, setState] = useState<T>(() => {
     try {
       const saved = localStorage.getItem(key);
       if (saved) {
-        setState(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        const sameType =
+          typeof parsed === typeof initialValue &&
+          Array.isArray(parsed) === Array.isArray(initialValue);
+        if (sameType) return parsed;
+        console.warn(`Corrupt localStorage for key "${key}", resetting`);
+        localStorage.removeItem(key);
       }
     } catch (error) {
       console.warn("Failed to load state", error);
-    } finally {
-      setLoading(false);
-      isLoaded.current = true;
+      localStorage.removeItem(key);
     }
-  }, [key]);
+    return initialValue;
+  });
 
   const setValue = useCallback(
     (newValue: T) => {
@@ -34,5 +35,5 @@ export function usePersistentState<T>(
     [key],
   );
 
-  return [state, setValue, loading] as const;
+  return [state, setValue, false] as const;
 }
