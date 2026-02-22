@@ -1,6 +1,6 @@
 # Daybound
 
-Time clarity for distributed teams. A minimal timezone dashboard web app.
+Daybound brings time clarity to distributed teams with a delightful timezone dashboard built for remote work. No more guessing who’s working when.
 
 ## Development
 
