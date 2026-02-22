@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Clock } from "lucide-react";
+import { usePostHog } from "@posthog/react";
 import { useTime } from "../hooks/useTime";
 import { usePersistentState } from "../hooks/useStorage";
 import {
   TimezoneConfig,
   AppSettings,
+  getCityName,
 } from "../utils/timezoneUtils";
 import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import { startOfDay, addDays } from "date-fns";
@@ -150,6 +152,45 @@ function App() {
 
   const designTheme = settings.designTheme || "te-1";
 
+  // ── PostHog analytics ──────────────────────────────────────────────
+  const posthog = usePostHog();
+  const homeCityDefaultSet = useRef(false);
+
+  useEffect(() => {
+    if (!posthog) return;
+
+    const props = {
+      timezone_count: timezones.length,
+      theme_mode: settings.theme ?? "system",
+      design_theme: settings.designTheme ?? "te-1",
+      time_format: settings.use24Hour ? "24h" : "12h",
+      timezone_badge_enabled: settings.showBadge ?? true,
+      show_weekends_enabled: settings.showWeekends ?? false,
+    };
+
+    posthog.people.set(props);
+    posthog.register(props);
+
+    const home = timezones.find((t) => t.isHome);
+    if (home) {
+      const cityName = home.label || getCityName(home.timezone);
+      posthog.people.set({ home_city: cityName });
+
+      if (!homeCityDefaultSet.current) {
+        posthog.people.set_once({ home_city_default: cityName });
+        homeCityDefaultSet.current = true;
+      }
+    }
+  }, [
+    posthog,
+    timezones,
+    settings.theme,
+    settings.designTheme,
+    settings.use24Hour,
+    settings.showBadge,
+    settings.showWeekends,
+  ]);
+
   // Apply Theme (light/dark/system) - Class List Management
   useEffect(() => {
     const root = window.document.documentElement;
@@ -276,11 +317,15 @@ function App() {
       isHome: false,
       ...(label ? { label } : {}),
     };
-    setTimezones([...timezones, newTimezone]);
+    const updated = [...timezones, newTimezone];
+    setTimezones(updated);
+    posthog?.capture("timezone_added", { timezone_count_after: updated.length });
   };
 
   const handleRemoveTimezone = (id: string) => {
-    setTimezones(timezones.filter((tz) => tz.id !== id));
+    const updated = timezones.filter((tz) => tz.id !== id);
+    setTimezones(updated);
+    posthog?.capture("timezone_removed", { timezone_count_after: updated.length });
   };
 
   const handleRename = (id: string, newLabel: string) => {
@@ -289,6 +334,7 @@ function App() {
         tz.id === id ? { ...tz, label: newLabel } : tz,
       ),
     );
+    posthog?.capture("timezone_renamed");
   };
 
   const moveTimezone = (
@@ -314,6 +360,7 @@ function App() {
       ];
     }
     setTimezones(newTimezones);
+    posthog?.capture("timezone_reordered", { direction });
   };
 
   const handleSetHome = (id: string) => {
@@ -328,6 +375,8 @@ function App() {
     
     if (homeTz) {
       setTimezones([homeTz, ...others]);
+      const cityName = homeTz.label || getCityName(homeTz.timezone);
+      posthog?.capture("home_timezone_changed", { home_city: cityName });
     }
   };
 

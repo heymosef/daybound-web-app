@@ -12,6 +12,7 @@ import {
   type SearchResult,
 } from "../../utils/timezoneUtils";
 import { motion, AnimatePresence } from "motion/react";
+import { usePostHog } from "@posthog/react";
 import { EASE_OUT, EASE_IN } from "../../utils/animation";
 
 /** Normalize underscores ↔ spaces for matching */
@@ -34,6 +35,7 @@ export const AddTimezone: React.FC<AddTimezoneProps> = ({
   onAdd,
   existingTimezones,
 }) => {
+  const posthog = usePostHog();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -147,12 +149,15 @@ export const AddTimezone: React.FC<AddTimezoneProps> = ({
         e.preventDefault();
         setIsOpen(true);
         setTimeout(() => inputRef.current?.focus(), 10);
+        posthog?.capture("keyboard_shortcut_used", {
+          shortcut: e.metaKey ? "cmd_k" : "ctrl_k",
+        });
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () =>
       window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [posthog]);
 
   const handleSelect = useCallback(
     (result: SearchResult) => {
