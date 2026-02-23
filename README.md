@@ -1,6 +1,6 @@
 # Daybound
 
-Daybound brings time clarity to distributed teams with a delightful timezone dashboard built for remote work. No more guessing who’s working when.
+Daybound brings time clarity to distributed teams with a delightful time zone dashboard built for remote work. No more guessing who’s working when.
 
 ## Development
 
