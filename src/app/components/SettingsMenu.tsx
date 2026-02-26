@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import {
   Settings,
   Check,
@@ -24,12 +24,20 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
+  // AnimatePresence keeps the dropdown mounted during exit animation.
+  // Mark it inert so exiting content can't capture keyboard focus.
+  const makeDropdownInert = useCallback(() => {
+    const panel = menuRef.current?.querySelector('[role="menu"]');
+    if (panel) (panel as HTMLElement).inert = true;
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
         menuRef.current &&
         !menuRef.current.contains(e.target as Node)
       ) {
+        makeDropdownInert();
         setIsOpen(false);
         triggerRef.current?.focus();
       }
@@ -40,11 +48,12 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
         "mousedown",
         handleClickOutside,
       );
-  }, []);
+  }, [makeDropdownInert]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        makeDropdownInert();
         setIsOpen(false);
         triggerRef.current?.focus();
       }
@@ -54,7 +63,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
       return () =>
         document.removeEventListener("keydown", handleEscape);
     }
-  }, [isOpen]);
+  }, [isOpen, makeDropdownInert]);
 
   const update = (patch: Partial<AppSettings>) => {
     onSettingsChange({ ...settings, ...patch });
@@ -69,12 +78,15 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
     <div className="relative h-full" ref={menuRef}>
       <button
         ref={triggerRef}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (isOpen) makeDropdownInert();
+          setIsOpen(!isOpen);
+        }}
         className={`flex items-center justify-center gap-[0.375em] px-[0.75em] py-[0.375em] rounded-md transition-all h-full min-w-[2.5em] ${
           isOpen
             ? "bg-[var(--dt-control-active)] text-[var(--dt-text)] drop-shadow-sm"
             : "text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)] hover:bg-[var(--dt-control-bg)]"
-        }`}
+        } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)]`}
         title="Settings"
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -124,7 +136,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
                   onChange={(e) => {
                     onSetHome(e.target.value);
                   }}
-                  className="w-full appearance-none bg-[var(--dt-control-bg)] text-[var(--dt-text)] pl-[0.75em] pr-[2em] py-[0.375em] rounded-md text-[clamp(12px,0.72vw+4.62px,15px)] font-medium focus:outline-none focus:ring-1 focus:ring-[var(--dt-accent)] cursor-pointer hover:bg-[var(--dt-surface-raised)] transition-colors truncate"
+                  className="w-full appearance-none bg-[var(--dt-control-bg)] text-[var(--dt-text)] pl-[0.75em] pr-[2em] py-[0.375em] rounded-md text-[clamp(12px,0.72vw+4.62px,15px)] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)] cursor-pointer hover:bg-[var(--dt-surface-raised)] transition-colors truncate"
                 >
                   {timezones.map((tz) => (
                     <option key={tz.id} value={tz.id}>
@@ -150,7 +162,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
                   <button
                     key={is24h ? "24h" : "12h"}
                     onClick={() => update({ use24Hour: is24h })}
-                    className={`flex-1 px-[0.5em] py-[0.25em] font-medium rounded-sm transition-all duration-200 text-[clamp(11px,0.66vw+4.23px,13.75px)] ${
+                    className={`flex-1 px-[0.5em] py-[0.25em] font-medium rounded-sm transition-all duration-200 text-[clamp(11px,0.66vw+4.23px,13.75px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)] ${
                       settings.use24Hour === is24h
                         ? "bg-[var(--dt-control-active)] text-[var(--dt-text)] drop-shadow-sm"
                         : "text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)]"
@@ -177,7 +189,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
                       <button
                         key={t}
                         onClick={() => update({ theme: t })}
-                        className={`flex-1 flex items-center justify-center px-[0.375em] py-[0.25em] font-medium rounded-sm transition-all duration-200 text-[clamp(11px,0.66vw+4.23px,13.75px)] ${
+                        className={`flex-1 flex items-center justify-center px-[0.375em] py-[0.25em] font-medium rounded-sm transition-all duration-200 text-[clamp(11px,0.66vw+4.23px,13.75px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)] ${
                           isSelected
                             ? "bg-[var(--dt-control-active)] text-[var(--dt-text)] drop-shadow-sm"
                             : "text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)]"
@@ -209,7 +221,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
                       onClick={() =>
                         update({ designTheme: dt })
                       }
-                      className={`flex-1 flex items-center justify-center px-[0.375em] py-[0.25em] font-medium rounded-sm transition-all duration-200 text-[clamp(11px,0.66vw+4.23px,13.75px)] ${
+                      className={`flex-1 flex items-center justify-center px-[0.375em] py-[0.25em] font-medium rounded-sm transition-all duration-200 text-[clamp(11px,0.66vw+4.23px,13.75px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)] ${
                         isActive
                           ? "bg-[var(--dt-control-active)] text-[var(--dt-text)] drop-shadow-sm"
                           : "text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)]"
@@ -242,7 +254,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
                   onClick={() =>
                     update({ showBadge: !showBadge })
                   }
-                  className="w-full flex items-center justify-between px-[0.5em] py-[0.375em] rounded-md text-[clamp(12px,0.72vw+4.62px,15px)] text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)] hover:bg-[var(--dt-surface-raised)] transition-colors"
+                  className="w-full flex items-center justify-between px-[0.5em] py-[0.375em] rounded-md text-[clamp(12px,0.72vw+4.62px,15px)] text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)] hover:bg-[var(--dt-surface-raised)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)] transition-colors"
                   role="menuitemcheckbox"
                   aria-checked={showBadge}
                 >
@@ -268,7 +280,7 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({
                   onClick={() =>
                     update({ showWeekends: !showWeekends })
                   }
-                  className="w-full flex items-center justify-between px-[0.5em] py-[0.375em] rounded-md text-[clamp(12px,0.72vw+4.62px,15px)] text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)] hover:bg-[var(--dt-surface-raised)] transition-colors"
+                  className="w-full flex items-center justify-between px-[0.5em] py-[0.375em] rounded-md text-[clamp(12px,0.72vw+4.62px,15px)] text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)] hover:bg-[var(--dt-surface-raised)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)] transition-colors"
                   role="menuitemcheckbox"
                   aria-checked={showWeekends}
                 >

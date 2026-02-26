@@ -251,7 +251,7 @@ export const AddTimezone: React.FC<AddTimezoneProps> = ({
   return (
     <div className="relative w-full md:w-[24.5em] h-full" ref={wrapperRef}>
       <div
-        className={`group flex items-center gap-[0.5em] px-[0.75em] py-[0.375em] bg-[var(--dt-search-surface)] border border-[var(--dt-border-strong)] rounded-md transition-all focus-within:bg-[var(--dt-bg)] focus-within:ring-2 focus-within:ring-[var(--dt-accent-ring)] focus-within:border-[var(--dt-accent)] hover:bg-[var(--dt-bg)] hover:border-[var(--dt-border-strong)] h-full ${isOpen ? "ring-2 ring-[var(--dt-accent-ring)] border-[var(--dt-accent)] bg-[var(--dt-bg)]" : ""}`}
+        className={`group flex items-center gap-[0.5em] px-[0.75em] py-[0.375em] bg-[var(--dt-search-surface)] border border-[var(--dt-border-strong)] rounded-md transition-all focus-within:outline-none focus-within:bg-[var(--dt-bg)] focus-within:ring-2 focus-within:ring-[var(--dt-accent)] hover:bg-[var(--dt-bg)] h-full ${isOpen ? "ring-2 ring-[var(--dt-accent)] bg-[var(--dt-bg)]" : ""}`}
         onClick={() => {
           setIsOpen(true);
           inputRef.current?.focus();
@@ -291,7 +291,7 @@ export const AddTimezone: React.FC<AddTimezoneProps> = ({
                 setSearch("");
                 inputRef.current?.focus();
               }}
-              className="flex items-center justify-center md:px-[0.375em] md:py-[0.125em] md:bg-[var(--dt-surface-raised)] md:border md:border-[var(--dt-border-strong)] md:rounded transition-colors"
+              className="flex items-center justify-center md:px-[0.375em] md:py-[0.125em] md:bg-[var(--dt-surface-raised)] md:border md:border-[var(--dt-border-strong)] md:rounded transition-colors focus:[outline-style:solid]"
             >
               <X
                 size="0.875em"
@@ -357,7 +357,7 @@ export const AddTimezone: React.FC<AddTimezoneProps> = ({
                         data-tz-item
                         role="option"
                         aria-selected={idx === highlightedIndex}
-                        className={`w-full text-left px-3 py-[0.5em] text-[clamp(13px,0.78vw+5px,16.25px)] transition-colors flex items-center justify-between group border-l-2 ${
+                        className={`w-full text-left px-3 py-[0.5em] text-[clamp(13px,0.78vw+5px,16.25px)] transition-colors flex items-center justify-between group border-l-2 focus:[outline-style:solid] ${
                           idx === highlightedIndex
                             ? "bg-[var(--dt-accent-wash)] text-[var(--dt-accent)] border-[var(--dt-accent)]"
                             : "text-[var(--dt-text-secondary)] hover:bg-[var(--dt-accent-wash)] hover:text-[var(--dt-accent)] border-transparent hover:border-[var(--dt-accent)]"

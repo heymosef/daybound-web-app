@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Clock } from "lucide-react";
+import { Clock, X } from "lucide-react";
 import { usePostHog } from "@posthog/react";
 import { useTime } from "../hooks/useTime";
 import { usePersistentState } from "../hooks/useStorage";
@@ -148,6 +148,11 @@ function App() {
     usePersistentState<AppSettings>(
       "app_settings",
       DEFAULT_SETTINGS,
+    );
+  const [localSaveNoticeDismissed, setLocalSaveNoticeDismissed] =
+    usePersistentState<boolean>(
+      "local_save_notice_dismissed",
+      false,
     );
 
   const designTheme = settings.designTheme || "te-1";
@@ -440,7 +445,7 @@ function App() {
                           key={i}
                           onClick={() => setSelectedDateOffset(i)}
                           className={`
-                          flex flex-col items-center justify-center gap-[0.125em] px-[0.6em] py-[0.375em] rounded-sm transition-all duration-200 min-w-[3em]
+                          flex flex-col items-center justify-center gap-[0.125em] px-[0.6em] py-[0.375em] rounded-sm transition-all duration-200 min-w-[3em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)]
                           ${
                             isSelected
                               ? "bg-[var(--dt-control-active)] text-[var(--dt-text)] drop-shadow-sm"
@@ -472,6 +477,25 @@ function App() {
               </div>
             </div>
           </div>
+
+          {!localSaveNoticeDismissed && (
+            <div
+              role="status"
+              className="flex items-center gap-[0.625em] p-[0.75em] bg-[var(--dt-accent-wash)] rounded-sm text-[var(--dt-text-secondary)]"
+            >
+              <span className="flex-grow text-[clamp(12px,0.6vw+9px,14px)] leading-normal">
+                Your changes are saved locally on this device. You can close this page and come back anytime.
+              </span>
+              <button
+                type="button"
+                aria-label="Dismiss local save notice"
+                onClick={() => setLocalSaveNoticeDismissed(true)}
+                className="flex-shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-md text-[var(--dt-text-muted)] hover:text-[var(--dt-text)] hover:bg-[var(--dt-bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)] transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          )}
 
           <div className="divide-y divide-[var(--dt-border)]">
             {timezones.length === 0 ? (

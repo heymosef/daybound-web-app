@@ -55,7 +55,6 @@
   --dt-accent: #6366f1;
   --dt-accent-80: rgba(99, 102, 241, 0.8);
   --dt-accent-70: rgba(99, 102, 241, 0.7);
-  --dt-accent-ring: rgba(99, 102, 241, 0.2);
   --dt-accent-wash: rgba(99, 102, 241, 0.05);
   --dt-bg: #ffffff;
   --dt-bg-hover: #f3f4f6;
@@ -112,7 +111,6 @@
     --dt-accent: oklch(0.45 0.18 275);
     --dt-accent-80: oklch(0.45 0.18 275 / 0.8);
     --dt-accent-70: oklch(0.45 0.18 275 / 0.7);
-    --dt-accent-ring: oklch(0.45 0.18 275 / 0.2);
     --dt-accent-wash: oklch(0.45 0.18 275 / 0.05);
     --dt-bg: oklch(1 0 0);
     --dt-bg-hover: oklch(0.96 0.01 260);
@@ -187,7 +185,6 @@
   --dt-accent: #818cf8;
   --dt-accent-80: rgba(129, 140, 248, 0.8);
   --dt-accent-70: rgba(129, 140, 248, 0.7);
-  --dt-accent-ring: rgba(129, 140, 248, 0.2);
   --dt-accent-wash: rgba(129, 140, 248, 0.05);
   --dt-bg: #292929;
   --dt-bg-hover: #333333;
@@ -257,7 +254,6 @@
     --dt-accent: oklch(0.68 0.16 275);
     --dt-accent-80: oklch(0.68 0.16 275 / 0.8);
     --dt-accent-70: oklch(0.68 0.16 275 / 0.7);
-    --dt-accent-ring: oklch(0.68 0.16 275 / 0.2);
     --dt-accent-wash: oklch(0.68 0.16 275 / 0.05);
     --dt-bg: oklch(0.18 0.02 260);
     --dt-bg-hover: oklch(0.21 0.02 260);
@@ -299,7 +295,6 @@
   --dt-accent: #f97316;
   --dt-accent-80: rgba(249, 115, 22, 0.8);
   --dt-accent-70: rgba(249, 115, 22, 0.7);
-  --dt-accent-ring: rgba(249, 115, 22, 0.2);
   --dt-accent-wash: rgba(249, 115, 22, 0.05);
   --dt-bg: #ececec;
   --dt-bg-hover: #e0e0e0;
@@ -335,7 +330,6 @@
     --dt-accent: oklch(0.58 0.21 40);
     --dt-accent-80: oklch(0.58 0.21 40 / 0.8);
     --dt-accent-70: oklch(0.58 0.21 40 / 0.7);
-    --dt-accent-ring: oklch(0.58 0.21 40 / 0.2);
     --dt-accent-wash: oklch(0.58 0.21 40 / 0.05);
     --dt-bg: oklch(0.92 0.005 100);
     --dt-bg-hover: oklch(0.88 0.005 100);
@@ -376,7 +370,6 @@
   --dt-accent: #fb923c;
   --dt-accent-80: rgba(251, 146, 60, 0.8);
   --dt-accent-70: rgba(251, 146, 60, 0.7);
-  --dt-accent-ring: rgba(251, 146, 60, 0.2);
   --dt-accent-wash: rgba(251, 146, 60, 0.05);
   --dt-bg: #333333;
   --dt-bg-hover: #404040;
@@ -412,7 +405,6 @@
     --dt-accent: oklch(0.6 0.21 40);
     --dt-accent-80: oklch(0.6 0.21 40 / 0.8);
     --dt-accent-70: oklch(0.6 0.21 40 / 0.7);
-    --dt-accent-ring: oklch(0.6 0.21 40 / 0.2);
     --dt-accent-wash: oklch(0.6 0.21 40 / 0.05);
     --dt-bg: oklch(0.2 0 0);
     --dt-bg-hover: oklch(0.25 0 0);
@@ -454,7 +446,6 @@
   --dt-accent: #059669;
   --dt-accent-80: rgba(5, 150, 105, 0.8);
   --dt-accent-70: rgba(5, 150, 105, 0.7);
-  --dt-accent-ring: rgba(5, 150, 105, 0.2);
   --dt-accent-wash: rgba(5, 150, 105, 0.05);
   --dt-bg: #f4f9f4;
   --dt-bg-hover: #e6f7eb;
@@ -490,7 +481,6 @@
     --dt-accent: oklch(0.6 0.18 150);
     --dt-accent-80: oklch(0.6 0.18 150 / 0.8);
     --dt-accent-70: oklch(0.6 0.18 150 / 0.7);
-    --dt-accent-ring: oklch(0.6 0.18 150 / 0.2);
     --dt-accent-wash: oklch(0.6 0.18 150 / 0.05);
     --dt-bg: oklch(0.97 0.02 140);
     --dt-bg-hover: oklch(0.95 0.03 140);
@@ -527,7 +517,6 @@
   --dt-accent: #34d399;
   --dt-accent-80: rgba(52, 211, 153, 0.8);
   --dt-accent-70: rgba(52, 211, 153, 0.7);
-  --dt-accent-ring: rgba(52, 211, 153, 0.2);
   --dt-accent-wash: rgba(52, 211, 153, 0.05);
   --dt-bg: #022c22;
   --dt-bg-hover: #064e3b;
@@ -563,7 +552,6 @@
     --dt-accent: oklch(0.7 0.15 150);
     --dt-accent-80: oklch(0.7 0.15 150 / 0.8);
     --dt-accent-70: oklch(0.7 0.15 150 / 0.7);
-    --dt-accent-ring: oklch(0.7 0.15 150 / 0.2);
     --dt-accent-wash: oklch(0.7 0.15 150 / 0.05);
     --dt-bg: oklch(0.18 0.05 150);
     --dt-bg-hover: oklch(0.22 0.06 150);
@@ -642,7 +630,8 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
+    outline-color: var(--dt-accent);
   }
 
   body {
@@ -743,5 +732,12 @@
     --squircle-smooth: 1;
     mask-image: paint(squircle);
     -webkit-mask-image: paint(squircle);
+  }
+
+  /* Disable squircle mask on focused elements so ring (box-shadow) is not clipped */
+  [class*="rounded"]:focus-visible,
+  [class*="rounded"]:focus-within {
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 }
