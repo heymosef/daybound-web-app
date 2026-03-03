@@ -7,6 +7,7 @@ import { PostHogProvider } from '@posthog/react'
 const posthogOptions = {
   api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
   defaults: '2026-01-30',
+  opt_out_capturing_by_default: window.location.hostname === 'localhost',
 } as const
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
