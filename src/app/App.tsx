@@ -12,6 +12,7 @@ import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import { startOfDay, addDays } from "date-fns";
 import { TimezoneRow } from "./components/TimezoneRow";
 import { AddTimezone } from "./components/AddTimezone";
+import { DatePicker } from "./components/DatePicker";
 import { SettingsMenu } from "./components/SettingsMenu";
 import {
   MotionConfig,
@@ -433,37 +434,12 @@ function App() {
 
               {/* Group Date Picker and Settings for better mobile layout */}
               <div className="flex flex-row items-stretch gap-[0.5em] flex-grow min-w-0">
-                <div className="flex items-center p-[0.125em] bg-[var(--dt-control-bg)] rounded-md overflow-x-auto [&::-webkit-scrollbar]:hidden flex-grow md:flex-grow-0 min-w-0">
-                  <div className="flex items-center min-w-max">
-                    {Array.from({ length: 7 }).map((_, i) => {
-                      const date = new Date(now);
-                      date.setDate(now.getDate() + i);
-                      const isSelected = i === selectedDateOffset;
-                      
-                      return (
-                        <button
-                          key={i}
-                          onClick={() => setSelectedDateOffset(i)}
-                          className={`
-                          flex flex-col items-center justify-center gap-[0.125em] px-[0.6em] py-[0.375em] rounded-sm transition-all duration-200 min-w-[3em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--dt-accent)]
-                          ${
-                            isSelected
-                              ? "bg-[var(--dt-control-active)] text-[var(--dt-text)] drop-shadow-sm"
-                              : "text-[var(--dt-text-secondary)] hover:text-[var(--dt-text)]"
-                          }
-                        `}
-                        >
-                          <span className="text-[clamp(13px,0.78vw+5px,16.25px)] font-medium leading-none">
-                            {date.getDate()}
-                          </span>
-                          <span className="text-[clamp(10px,0.5vw+8px,12px)] leading-none font-medium opacity-90">
-                            {date.toLocaleDateString("default", { month: "short" })}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                <DatePicker
+                  selectedDateOffset={selectedDateOffset}
+                  onSelectDate={setSelectedDateOffset}
+                  now={now}
+                  homeTimezone={homeTimezone}
+                />
 
                 {/* Right Actions */}
                 <div className="flex-shrink-0 flex items-stretch md:ml-auto">
